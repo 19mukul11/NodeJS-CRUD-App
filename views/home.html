@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME PAGE</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body class="bg-secondary">
+
+    <div class="container">
+
+        <div class="row bg-danger text-white py-2" id="header">
+            <h1 class="text-center"> NodeJS - MySQL CRUD Application</h1>
+        </div>
+        <div class="row bg-dark text-light text-center" id="navbar">
+            <a class="col-2 py-2 nav-item" href="/">
+                HOME
+            </a>
+            <a class="col-2 py-2 nav-item" href="/insertPage">
+                INSERT
+            </a>
+            <a class="col-2 py-2 nav-item" href="/searchPage">
+                SEARCH
+            </a>
+        </div>
+
+        <div class="row bg-light text-dark p-5" id="main-content">
+
+        </div>
+    </div>
+
+
+    <!-- MODAL BOX FOR UPDATE  -->
+    <div class="modal" id="update-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Record</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form id="update-form">
+
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="js/jquery-3.6.0.js"></script> -->
+    <script>
+
+        $(document).ready(function () {
+
+
+            function loadData() {
+
+                $.ajax({
+
+                    url: "/students",
+                    type: "get",
+                    success: function (result) {
+                        $("#main-content").html(result);
+                    }
+
+                });
+            }
+            loadData();
+
+
+            //ON CLICK OF DELETE BTN OF A RECORD
+            $(document).on("click", ".delete-btn", function (e) {
+
+                let sid = $(this).data("sid");
+
+                $.ajax({
+                    url: "/delete",
+                    type: 'post',
+                    data: {
+                        id: sid
+                    },
+                    success: function (result) {
+
+                        if (result > 0) {
+                            alert("Record Deleted Successfully !!");
+                            loadData();
+                        } else {
+                            alert("Internal Server Error : " + result);
+                        }
+
+                    }
+                });
+
+            });
+
+
+            //ON CLICK OF UPDATE BTN
+            $(document).on("click", ".update-btn", function (e) {
+
+                let sid = $(this).data("sid");
+
+                $.ajax({
+                    url : "/updateForm",
+                    type : "post",
+                    data : {
+                        id : sid
+                    },
+                    success : function(result){
+
+                        $("#update-form").html(result);
+                        $('#update-modal').modal('show');
+                    }
+                });
+            });
+
+
+            $("#update-form").on("submit",function(e){
+
+                e.preventDefault();
+
+                $.ajax({
+
+                    url: "/update",
+                    type: "post",
+                    data : $("#update-form").serialize(),
+                    success : (result)=>{
+                        
+                        if(result >0){
+
+                            alert("Record Updated Successfully !!")
+                            loadData();
+                            $('#update-modal').modal('hide');
+
+                        }else{
+                            alert("Internal Server Error : "+result);
+                        }
+                    }
+                });
+            });
+
+
+
+        });
+    </script>
+</body>
+
+</html>
