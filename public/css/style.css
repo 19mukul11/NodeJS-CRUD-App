@@ -1,0 +1,26 @@
+.nav-item{
+    color: white;
+    text-decoration: none;
+}
+
+
+.nav-item:hover{
+    background-color: lightgrey;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#add-form, #search-form, #update-form{
+    display: flex;
+    flex-direction: column;
+    padding:  18px;
+    border: 1px solid lightgray;
+    width: 400px;
+    margin: 10px auto;
+    border-radius: 12px;
+}
+#add-form input, #search-form input,  #update-form input{
+    margin: 10px auto;
+    width: 100%;
+}
